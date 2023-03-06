@@ -9,6 +9,7 @@ import ico
 import pyautogui
 
 e = threading.Event()
+e2 = threading.Event()
 
 def printInfo():
     global quit
@@ -52,14 +53,20 @@ def moveMouse(t):
                 print('Failed')
 
         print('break')
+        e2.set()
         quit['state'] = 'normal'
         run['state'] = 'normal'
     except KeyboardInterrupt as  e:
         print('log' + str(e))
 
 def countDownFun(countDownSecond):
-    time.sleep(countDownSecond)
-    stopWait()
+    global e2
+    e2 = threading.Event()
+    res = e2.wait(timeout = countDownSecond)
+    if not res:
+        # 计时到了
+        # global e
+        e.set()
     pass
 
 def stopWait():
@@ -73,7 +80,7 @@ tmp.close()
 myWindow.iconbitmap('tmp.ico')
 os.remove('tmp.ico')
 #标签控件布局
-Label(myWindow, text="time").grid(row=0)
+Label(myWindow, text="interval:").grid(row=0)
 # Label(myWindow, text="output").grid(row=1)
 #Entry控件布局
 entry1=Entry(myWindow)
@@ -83,7 +90,7 @@ Label(myWindow, text="（秒）").grid(row=0, column=2)
 # entry2.grid(row=1, column=1)
 
 #标签控件布局
-Label(myWindow, text="countdown").grid(row=1)
+Label(myWindow, text="countdown:").grid(row=1)
 # Label(myWindow, text="output").grid(row=1)
 #Entry控件布局
 entry2=Entry(myWindow)
