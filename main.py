@@ -2,6 +2,7 @@ import base64
 import os
 import random
 import threading
+import time
 from tkinter import *
 import ico
 
@@ -19,6 +20,11 @@ def printInfo():
     print(str(second))
     thread = threading.Thread(target=moveMouse, args=(second, ))
     thread.start()
+
+    if entry2.get() != None and entry2.get() != '':
+        countDownSecond = int(entry2.get()) * 60
+        threadCountDown = threading.Thread(target=countDownFun, args=(countDownSecond,))
+        threadCountDown.start()
     # moveMouse(second)
     print('sucess')
 
@@ -51,11 +57,16 @@ def moveMouse(t):
     except KeyboardInterrupt as  e:
         print('log' + str(e))
 
+def countDownFun(countDownSecond):
+    time.sleep(countDownSecond)
+    stopWait()
+    pass
+
 def stopWait():
     e.set()
 
 myWindow = Tk()
-myWindow.title('keep active')
+myWindow.title('keep V2.0')
 tmp = open('tmp.ico', 'wb+')
 tmp.write(base64.b64decode(ico.img))
 tmp.close()
@@ -68,7 +79,19 @@ Label(myWindow, text="time").grid(row=0)
 entry1=Entry(myWindow)
 # entry2=Entry(myWindow)
 entry1.grid(row=0, column=1)
+Label(myWindow, text="（秒）").grid(row=0, column=2)
 # entry2.grid(row=1, column=1)
+
+#标签控件布局
+Label(myWindow, text="countdown").grid(row=1)
+# Label(myWindow, text="output").grid(row=1)
+#Entry控件布局
+entry2=Entry(myWindow)
+# entry2=Entry(myWindow)
+entry2.grid(row=1, column=1)
+Label(myWindow, text="（分钟）").grid(row=1, column=2)
+
+
 #Quit按钮退出；Run按钮打印计算结果
 
 global quit
